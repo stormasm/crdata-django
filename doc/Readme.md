@@ -1,2 +1,10 @@
 
 * [page 01](./crdata01.png)
+* [page 02](./crdata02.png)
+* [page 03](./crdata03.png)
+* [page 04](./crdata04.png)
+* [page 05](./crdata05.png)
+* [page 06](./crdata06.png)
+* [page 07](./crdata07.png)
+* [page 08](./crdata08.png)
+* [page 09](./crdata09.png)
