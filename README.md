@@ -13,3 +13,7 @@ wanted to achieve.
 
 The initial commit for the Ruby project was done on
 [July 2, 2010](https://github.com/seerdata/crdata/commit/f506124d8d1d7c0b24db35cfc01235ebf3e3ad9f).
+
+### Documentation
+
+[Here are the doc pages.](./doc/Readme.md)
