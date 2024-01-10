@@ -16,4 +16,6 @@ The initial commit for the Ruby project was done on
 
 ### Documentation
 
+[Here is the Programmer's Guide](./doc/PG_1_02_FINAL.pdf)
+
 [Here are the doc pages.](./doc/Readme.md)
