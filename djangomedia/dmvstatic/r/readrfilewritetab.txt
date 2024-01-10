@@ -1,0 +1,12 @@
+readfilewritetab=function(inputfile,outputfile,filetype)
+{
+if (filetype == "csv") {
+	dataframe = read.csv(inputfile, header=TRUE)
+	write.table(dataframe,outputfile,quote=F,sep='\t',row.names=F)
+	}
+	else {
+	dataframe = read.table(inputfile, header=TRUE)
+	write.table(dataframe,outputfile,quote=F,sep='\t',row.names=F)
+	}	
+}
+

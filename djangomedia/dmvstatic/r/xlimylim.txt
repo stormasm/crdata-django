@@ -1,0 +1,76 @@
+xlimylim = function(rangescores,userinput) {	
+
+uiconst = 12345.6789
+output = c()
+index = c(1,2,3,4)
+for (i in index) {
+	if(userinput[i] == uiconst)
+		output = append(output, rangescores[i])
+	else
+		output = append(output,userinput[i])
+}
+return(output)
+}
+
+#
+#  All the code below here is for MDS
+#  because MDS does not calculate the range scores
+#
+
+
+xlimylimbool = function(field) {
+	if( (field[1] == 0.123)  & (field[2] == 0.123)) {
+		return(TRUE)
+	}
+	else {
+		return(FALSE)
+	}
+}
+	
+xlimprocess = function(field) {
+	output = c()
+	if(field[1] == 0.123) {
+		output = append(output,0.123)		
+	}
+	else {
+		output = append(output,field[1])
+	}
+	if(field[2] == 0.123) {
+		output = append(output,0.123)		
+	}
+	else {
+		output = append(output,field[2])
+	}
+}
+
+ylimprocess = function(field) {
+	output = c()
+	if(field[3] == 0.123) {
+		output = append(output,0.123)		
+	}
+	else {
+		output = append(output,field[3])
+	}
+	if(field[4] == 0.123) {
+		output = append(output,0.123)		
+	}
+	else {
+		output = append(output,field[4])
+	}
+}
+
+
+xlimylimnorangescores = function(userinput) {	
+
+uiconst = 12345.6789
+output = c()
+index = c(1,2,3,4)
+for (i in index) {
+	if(userinput[i] == uiconst)
+		output = append(output, 0.123)
+	else
+		output = append(output,userinput[i])
+}
+return(output)
+}
+

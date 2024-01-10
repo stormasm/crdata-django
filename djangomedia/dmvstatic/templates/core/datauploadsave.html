@@ -1,0 +1,13 @@
+{%extends "database.html"%}
+
+{%block body%}
+<h2>Upload a Data File</h2>
+
+<form action="{%url core.views.dataupload%}" method="post" enctype="multipart/form-data" id="dataupload-form">
+<table>
+{{form}}
+<tr><td><input type="submit" value="Upload File"></td></tr>
+</table>
+</form>
+
+{%endblock%}

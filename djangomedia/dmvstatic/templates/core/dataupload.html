@@ -1,0 +1,23 @@
+{%extends "database.html"%}
+
+{%block body%}
+<h2>Upload a Data File</h2>
+
+<form action="{%url core.views.dataupload%}" method="post" enctype="multipart/form-data" id="dataupload-form">
+<table>
+
+<tr><th><label for="id_data">Data:</label></th><td><input type="file" name="data" id="id_data" /></td></tr>
+
+<tr><th><label style="display:none" for="id_filetype">Filetype:</label></th><td><select style="display:none" name="filetype" id="id_filetype">
+<option value="Type001">Type001</option>
+</select></td></tr>
+
+<tr><th><label style="display:none" for="id_modelname">Modelname:</label></th><td><select style="display:none" name="modelname" id="id_modelname">
+<option value="Multivariate">Multivariate</option>
+</select></td></tr>
+
+<tr><td><input type="submit" value="Upload File"></td></tr>
+</table>
+</form>
+
+{%endblock%}

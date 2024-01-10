@@ -1,0 +1,168 @@
+{%extends "interactivebase.html"%}
+{%block body%}
+<h2>{{user}}'s data</h2>
+
+    <link href="layout.css" rel="stylesheet" type="text/css"></link>
+
+<script id="source" language="javascript" type="text/javascript">
+$(document).ready(function(){
+
+var ajaxdata;
+var thelegend = $("#thelegend");
+var placeholder = $("#placeholder");    
+
+    var options = {
+        points: { show: true },
+	legend: { noColumns:10, container:thelegend },
+        selection: { mode: "xy" },
+        grid: { hoverable: true, clickable: true },
+    };
+
+var testdata =   [ { label: "Red", data: [ [2.2, 1] ] },
+    			     { label: "Green", data: [ [5, 4] ] },
+    			     { label: "Blue", data: [ [3, 3] ] },
+    			     { label: "Black", data: [ [4, 2] ] },			     
+			   ];
+			   
+function processCsvData(csvin) {
+	var xdict = new Array();
+	for (var i = 0; i < csvin.length; ++i) {
+		// data
+		p01 = [[eval(csvin[i][0]),eval(csvin[i][1])]];
+		// label
+		p02 = csvin[i][2];
+		var ydict = {};
+		ydict.data = p01;		
+		ydict.label = p02;
+		xdict.push(ydict)
+	}
+	ajaxdata = xdict;
+	return(xdict);
+}
+			   
+function ajaxGetData(url) {
+    $.get(url,
+    	      function(data) {
+		mycsv = $.csv()(data);
+		realdata = processCsvData(mycsv);
+//		plot = $.plot(placeholder, testdata, options);
+		plot = $.plot(placeholder, realdata, options);
+	     });
+}
+
+    var filelist = [];
+    var myuser;
+
+	{%for file in files%}
+		 filelist.push("#{{file|cut:"."}}")
+	{% endfor %}
+	
+	$("select").change(function () {
+		$("select option:selected").each(function () {
+		var xfilename = $(this).text();
+		var result = "http://www.crdata.org/dmvimage/{{user}}/interactive/" + xfilename;
+		var duc = decodeURIComponent || unescape;
+		var url = duc(window.location.search.substr(5)) || result;
+		if (url) {
+			$("#url").val(url);
+			ajaxGetData(url);
+			}
+		
+		});			
+	});
+    
+
+    function showTooltip(x, y, contents) {
+        $('<div id="tooltip">' + contents + '</div>').css( {
+            position: 'absolute',
+            display: 'none',
+            top: y + 5,
+            left: x + 5,
+            border: '1px solid #fdd',
+            padding: '2px',
+            'background-color': '#fee',
+            opacity: 0.80
+        }).appendTo("body").fadeIn(200);
+    }
+
+    var previousPoint = null;
+    
+    $("#placeholder").bind("plothover", function (event, pos, item) {
+        $("#x").text(pos.x.toFixed(2));
+        $("#y").text(pos.y.toFixed(2));
+
+        if ($("#enableTooltip:checked").length > 0) {
+            if (item) {
+                if (previousPoint != item.datapoint) {
+                    previousPoint = item.datapoint;
+                    
+                    $("#tooltip").remove();
+                    var x = item.datapoint[0].toFixed(2),
+                        y = item.datapoint[1].toFixed(2);
+                    
+                    showTooltip(item.pageX, item.pageY,
+                                item.series.label + " of " + x + " = " + y);
+                }
+            }
+            else {
+                $("#tooltip").remove();
+                previousPoint = null;            
+            }
+        }
+    });
+
+    $("#placeholder").bind("plotclick", function (event, pos, item) {
+        if (item) {
+            $("#clickdata").text("You clicked point " + item.dataIndex + " in " + item.series.label + ".");
+            plot.highlight(item.series, item.datapoint);
+        }
+    });
+
+    
+    $("#placeholder").bind("plotselected", function (event, ranges) {
+        // clamp the zooming to prevent eternal zoom
+        if (ranges.xaxis.to - ranges.xaxis.from < 0.00001)
+            ranges.xaxis.to = ranges.xaxis.from + 0.00001;
+        if (ranges.yaxis.to - ranges.yaxis.from < 0.00001)
+            ranges.yaxis.to = ranges.yaxis.from + 0.00001;
+	    	
+        // do the zooming
+        plot = $.plot($("#placeholder"), ajaxdata,
+                      $.extend(true, {}, options, {
+                          xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to },
+                          yaxis: { min: ranges.yaxis.from, max: ranges.yaxis.to }
+                      }));
+    });
+    
+    $("#showPlotData").click(function () {
+        zoomdata = plot.getData();
+	for (row in zoomdata) {
+	       var qq = zoomdata[row];
+		console.log(qq.data + " " + qq.label);
+	};
+    });
+    
+     $("#getData").click(function () {
+     		console.log(ajaxdata);
+    });
+    
+});
+</script>
+
+<select name="filename">
+{%for file in files%}
+    <option id="{{file|cut:"."}}" value="{{file}}">{{file}}</option>
+{% endfor %}
+</select>
+<br><br>
+
+<p id="hoverdata">Mouse hovers at
+    (<span id="x">0</span>, <span id="y">0</span>). <span id="clickdata"></span></p>
+
+<p><input id="enableTooltip" type="checkbox">Enable tooltip</input>
+<input id="getData" type="button" value="Get Data" />
+</p>
+<div id="placeholder" style="width:600px;height:300px;"></div>
+<div id="thelegend"></div>
+<input id="showPlotData" type="button" value="Show Plot Data" />
+{%endblock%}

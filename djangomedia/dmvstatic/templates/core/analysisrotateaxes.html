@@ -1,0 +1,75 @@
+{%extends "analysisbase.html"%}
+{%block body%}
+
+	<style type="text/css" title="currentStyle">
+		@import "http://www.crdata.org/dmvstatic/jqueryui/themes/base/ui.all.css";
+	</style>
+	
+	<script src="http://www.crdata.org/dmvstatic/jqueryui/ui/ui.core.js"></script>
+	<script src="http://www.crdata.org/dmvstatic/jqueryui/ui/ui.slider.js"></script>	
+	<script type="text/javascript">
+
+	$(document).ready(function(){
+    
+		$("#butrotateaxis").click(function () {
+			$("#rotateaxis").toggle();
+		});
+	
+		$(function() {
+		
+			$("#xaxis").slider({
+				orientation: "horizontal",
+				range: "min",
+				min: 0,
+				max: 360,
+				value: 0,
+				slide: function(event, ui) {
+				$("#xamount").val(ui.value);
+			}
+			});
+
+			$("#xamount").val($("#xaxis").slider("value"));
+		});
+	
+	});	
+
+	</script>
+</head>
+<body>
+
+
+<h2>Rotate Axes</h2>
+
+<p><button id="butrotateaxis">RotateAxis</button></p>
+
+For now this is testing X and Y axis rotation.
+
+This will display your simple data.
+
+<h2>List of data files for {{user}}.</h2>
+
+<form action="{%url core.views.displayrotateaxes%}" method="post">
+
+<select name="filename">
+{%for file in files%}
+    <option id="{{file|cut:"."}}" value="{{file}}">{{file}}</option>
+{% endfor %}
+</select>
+<br><br>
+
+<p>
+<div style="display: none" id="rotateaxis">
+
+<label for="xamount">X Value:</label>
+<input type="text" name="xamount" id="xamount" value="xamount" style="border:0; color:#f6931f; font-weight:bold;" />
+</p>
+<div id="xaxis"></div>
+
+</div>
+
+<br>
+<br>
+<input type="submit" value="Submit" />
+</form>	
+
+{%endblock%}

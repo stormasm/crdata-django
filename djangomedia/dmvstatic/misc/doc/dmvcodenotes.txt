@@ -1,0 +1,32 @@
+Dmv Code Notes
+
+How the uploaded file sequence works.
+
+readUploadedFileAndWriteToDisk
+
+1. Read file from user (upload file)
+2. Write this file to the disk in tmp directory
+
+checkUploadedFileAndWriteTabSeparated
+
+3. Read file back into R from disk, 
+this is checking to make sure everything is good,
+and if thing are cool then continue -- else R will throw an error
+4. Write back to disk tab separated
+
+readFileAndPickleToDictionary
+5. Read file back from disk and
+
+writeDataDictionaryToDatabase
+6. Pickle a python dictionary to the database.
+
+This guarantees going forward several things.
+
+1) In the future user can retrieve his/her data from us,
+and display in their spreadsheet because we are storing
+the data in a tab separated format.
+
+2) This allows the internals of our code to always know
+that when we pull data out of the database it is always
+in the exact same format, which is tab separated.
+

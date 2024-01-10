@@ -1,0 +1,45 @@
+require(MASS)
+
+plotperspective  = function(imagefile)
+{
+
+png(imagefile,width=700,height=438)
+
+set.seed(125)
+x = rnorm(150,mean=3*rbinom(150,prob=.5,size=1),sd=1)
+y = rnorm(150,mean=4*rbinom(150,prob=.5,size=2),sd=1)
+
+# a 2d density computed by kde2D
+d = kde2d(x,y,n=50)
+
+z = d$z
+nrz = nrow(z)
+ncz = ncol(z)
+
+# the number of colors to use
+ncol=50          
+# limits in z coordinates
+zlim=c(0,max(z))
+# see option nlevels in contour
+nlevels=20       
+# see option theta in persp
+theta=30        
+# see option phi in persp
+phi=30           
+	
+
+couleurs = tail(topo.colors(trunc(1.4 * ncol)),ncol)
+fcol = couleurs[trunc(z/zlim[2]*(ncol-1))+1]
+dim(fcol) = c(nrz,ncz)
+fcol = fcol[-nrz,-ncz]
+
+par(mfrow=c(1,2),mar=c(0.5,0.5,0.5,0.5))
+persp(d,col=fcol,zlim=zlim,theta=theta,phi=phi,zlab="density")
+
+par(mar=c(2,2,2,2))
+image(d,col=couleurs)
+contour(d,add=T,nlevels=nlevels)
+box()
+dev.off()
+}
+

@@ -1,0 +1,69 @@
+{%extends "database.html"%}
+{%block body%}
+<h2>View a Data File</h2>
+
+	<style type="text/css" title="currentStyle">
+		@import "http://www.crdata.org/dmvstatic/datatables/css/demos.css";
+	</style>
+	<script type="text/javascript" charset="utf-8">	
+
+	var hyjson;
+	var myjson = {
+		"aoColumns": [
+			{ "sTitle": "A" },
+			{ "sTitle": "B" },
+			{ "sTitle": "C" }
+		],
+		"aaData": [
+			[ "1", "2", "3" ],
+			[ "4", "5", "6" ],						
+			[ "7", "8", "9" ]						
+		]
+	};
+	
+	$(document).ready(function(){
+	
+	var filelist = []; 
+	
+	{%for file in files%}
+		 filelist.push("#{{file|cut:"."}}")
+	{% endfor %}
+	
+    $("#boo").change(function () {
+          var xfilename = "";
+          $("#boo option:selected").each(function () {
+                xfilename += $(this).text();
+              });
+		$.post('ajaxgetdatafromfile', {'filename': xfilename},
+				function(data){
+					$("#container").empty();
+					hyjson = data;
+					var mynewdiv = builddatatables(myjson);
+					$("#container").append(mynewdiv);
+					}, "json");
+		});
+   	});
+	
+	var builddatatables = function(data) {
+		$('#container').html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="example"></table>' );
+		$('#example').dataTable(hyjson);	
+	}
+	
+	</script>
+
+This will show you your data files.
+
+<h2>List of data files for {{user}}.</h2>
+
+<select id="boo" name="filename">
+{%for file in files%}
+    <option id="{{file|cut:"."}}" value="{{file}}">{{file}}</option>
+{% endfor %}
+</select>
+
+<div id="dt_example">
+	<div id="container"/>
+</div>
+
+{%endblock%}
+

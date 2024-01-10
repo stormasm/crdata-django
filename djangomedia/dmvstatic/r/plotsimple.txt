@@ -1,0 +1,12 @@
+plotsimple=function(datafile,imagefile,filetype)
+{
+if (filetype == "csv")
+	simple = read.csv(datafile, header=FALSE)
+else
+	simple = read.table(datafile, header=FALSE)
+png(imagefile)
+plot(simple,type="o",col="blue")
+dev.off()
+}
+
+

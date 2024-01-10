@@ -1,0 +1,50 @@
+getColorPalette = function(numofcolors,palettename)
+{
+library(RColorBrewer)
+
+colors = rainbow(numofcolors)
+
+# if palettename is FALSE then the user did NOT select a palette
+
+if (palettename != "Default") {
+	colors <-brewer.pal(numofcolors,palettename)
+}
+
+return(colors)
+}
+
+# given a palette name
+# return the maximum number of different colors in the palette  
+
+maxbrewernumber=function(palettename)
+{
+bnumber = brewer.pal.info[palettename,]$maxcolors
+return(bnumber)
+}
+
+# based on the number of colors needed
+# we will either use rainbow 
+# or if the user selects a palette
+# assuming the number of colors the user needs 
+# is less than or equal to numofcolors 
+
+getColorPaletteDependentOnTheNumberOfColors = function(numofcolors,palettename)
+{
+library(RColorBrewer)
+# colors = rainbow(length(rownames))
+
+colors = rainbow(numofcolors)
+
+# if palettename is FALSE then the user did NOT select a palette
+
+if (palettename != "Default") {
+	maxcolors = maxbrewernumber(palettename)
+	if (numofcolors <= maxcolors) {
+		colors <-brewer.pal(numofcolors,palettename)
+	}
+}
+
+return(colors)
+}
+
+

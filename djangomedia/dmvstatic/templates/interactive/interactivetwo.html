@@ -1,0 +1,70 @@
+{%extends "interactivebase.html"%}
+{%block body%}
+<h2>{{user}}'s data</h2>
+
+    <link href="layout.css" rel="stylesheet" type="text/css"></link>
+
+<script id="source" language="javascript" type="text/javascript">
+$(document).ready(function(){
+    var optionwithlines = {
+        lines: { show: true },
+        points: { show: true },
+    };
+    var options = {
+        points: { show: true },
+    };
+
+var placeholder = $("#placeholder");
+var mydata;    
+    
+function showCSV(url) {
+    $.get(url,
+    	      function(data) {
+		console.log($.csv()(data));
+		mycsv = $.csv()(data);
+		mydata = [mycsv];
+		$.plot(placeholder, mydata, options);
+	     });
+}
+
+    $("#linespoints").click(function () {
+        var clickedon = $("#linespoints").attr("checked");
+        if(clickedon) {
+            	plot = $.plot(placeholder, mydata, optionwithlines);	
+	}
+	else {
+            	plot = $.plot(placeholder, mydata, options);
+	}
+    });
+
+    var filelist = [];
+    var myuser;
+
+	{%for file in files%}
+		 filelist.push("#{{file|cut:"."}}")
+	{% endfor %}
+	
+	$("select").change(function () {
+		$("select option:selected").each(function () {
+		var xfilename = $(this).text();
+		var result = "http://www.crdata.org/dmvimage/{{user}}/interactive/" + xfilename;
+		var duc = decodeURIComponent || unescape;
+		var url = duc(window.location.search.substr(5)) || result;
+		if (url) {
+			$("#url").val(url);
+			showCSV(url);
+			}
+		});			
+	});
+});
+</script>
+
+<select name="filename">
+{%for file in files%}
+    <option id="{{file|cut:"."}}" value="{{file}}">{{file}}</option>
+{% endfor %}
+</select>
+<br><br>
+<p><input id="linespoints" type="checkbox">Lines and Points</input></p>
+<div id="placeholder" style="width:600px;height:300px;"></div>
+{%endblock%}

@@ -1,0 +1,85 @@
+{%extends "helpbase.html"%}
+{%block body%}
+<h2>Analysis Best Practices</h2>
+
+These are the
+<a href="http://en.wikipedia.org/wiki/Best_practice">
+best practices</a>
+for using Analysis algorithms in CRdata.<br><br>
+
+<a href="http://stat.ethz.ch/R-manual/R-patched/library/graphics/html/barplot.html">
+Bar Plot</a>
+&nbsp;
+Create a bar plot with Vertical bars is best displayed with 20 or less rows in your data set.
+<br><br>
+
+<a href="http://stat.ethz.ch/R-manual/R-patched/library/graphics/html/boxplot.html">
+Box Plot</a>
+&nbsp;
+Create box-and-whisker plots.
+<br><br>
+
+<a href="http://stat.ethz.ch/R-manual/R-patched/library/stats/html/heatmap.html">
+Heat Map</a>
+&nbsp;
+A graphical representation of data where the values are represented as colors is best displayed
+with 50 or less rows in your data set.
+<br><br>
+
+<a href="http://stat.ethz.ch/R-manual/R-patched/library/stats/html/cmdscale.html">
+Multi Dimensional Scaling [MDS]</a>
+&nbsp;&nbsp;
+
+<br><br>
+
+<a href="http://stat.ethz.ch/R-manual/R-patched/library/stats/html/princomp.html">
+Principal Component Analysis [PCA]</a>
+&nbsp;&nbsp;
+<br><br>
+
+<a href="http://pbil.univ-lyon1.fr/library/pls.pcr/html/mvr.html">
+Partial Least Squares Regression [PLSR]</a>
+&nbsp;&nbsp;
+Please use two data files when running PLSR analyses. 
+<br><br>
+
+<a href="http://stat.ethz.ch/R-manual/R-patched/library/graphics/html/pie.html">
+Pie Chart</a>
+&nbsp;
+Pie charts are best displayed with 25 or less rows in your data set.
+<br><br>
+
+<a href="http://stat.ethz.ch/R-manual/R-patched/library/graphics/html/plot.html">
+Time Series</a>
+&nbsp;
+Plotting of x and y values are best displayed with 25 or less rows in your data set.
+When plotting time series please use the default <b>Color Palette</b>.  The custom, user selected color 
+palette's currently do not work.
+
+<br><br>
+
+<h2>Notes of Interest</h2>
+
+<ul>
+<li>
+When viewing the interactive plots of MDS, PCA, and PLS there is a checkbox called <b>Enable Tooltip</b>.
+When this box is checked it allows you to see the X and Y coordinates of the row data.  The syntax of the X
+and Y coordinates is of the form "Rowname of X = Y".
+</li>
+<br>
+<li>
+The first row and column in CRdata input
+files are assumed to be row and column labels (names).  These label names
+can be any mixture of the letters A - Z and numerals 0 - 9, otherwise known as
+alphanumeric characters.
+</li>
+<br>
+<li>
+When viewing the plots of MDS, PCA, and PLS there is a button called <b>Scale Axis</b>.  This button allows
+one to set the X Min, X Max, Y Min and Y Max of the output graphs.  If you use the Slider in connection with 
+the Min and Max settings it allows one to both expand and contract the axes values along with limiting the 
+scope of that scaling.
+</li>
+</ul>
+
+{%endblock%}

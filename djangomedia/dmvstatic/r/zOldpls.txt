@@ -1,0 +1,104 @@
+plotpls=function(datafile1,datafile2,imagefile,interactivefile,filetype1,filetype2,outfile,plsCompPlot,outfilebool,theta,gamma){
+
+geneNameCol = 1
+
+if (filetype1 == "csv")
+	dataframe1 = read.csv(datafile1, header=TRUE)
+else
+	dataframe1 = read.table(datafile1, header=TRUE)
+	
+if (filetype2 == "csv")
+	dataframe2 = read.csv(datafile2, header=TRUE)
+else
+	dataframe2 = read.table(datafile2, header=TRUE)
+		
+dataframe = cbind(dataframe1,dataframe2[,-1])
+png(imagefile,width=720,height=438)
+
+# get the number of columns in this matrix
+numofcols = dim(dataframe)[2]
+columnames = colnames(dataframe)
+
+# rotation matrix
+#theta = pi / 4
+mdat = matrix(c(cos(theta), sin(theta), -sin(theta), cos(theta)), nrow = 2, ncol=2, byrow=TRUE)
+
+# Axis Scaling
+ndat = matrix(c(gamma, 0, 0, gamma), nrow = 2, ncol=2, byrow=TRUE)
+
+# get all but the first column
+columnames = columnames[2:numofcols]
+ymat <-model.matrix(~0+columnames);colnames(ymat)= sapply(colnames(ymat),function(x) strsplit(x,"columnames")[[1]][2])
+
+datacols <- c(2:numofcols)
+xmat=apply(dataframe[,datacols],2,function(x) as.real(x))
+
+library(pls)
+
+txmat = t(xmat); colnames(txmat) = as.character(dataframe[,geneNameCol]) 
+
+plso=plsr(ymat~txmat,ncomp=max(plsCompPlot))
+sink(outfile)
+summary(plso)
+sink()
+xlogadM= plso$loadings[,plsCompPlot]
+yloadM= plso$Yloadings[,plsCompPlot]
+
+xlogadM = xlogadM %*% mdat
+yloadM = yloadM %*% mdat
+
+compM=diag(c(1,1))
+compM= compM %*% mdat
+row.names(compM)=c(paste("Comp ",plsCompPlot[1],sep=" "),paste("Comp ",plsCompPlot[2],sep = " "))
+
+xlogadM = xlogadM %*% ndat
+yloadM = yloadM %*% ndat
+
+rg_xloadM=apply(xlogadM,2,range)
+rg_yloadM=apply(yloadM,2,range)
+yloadM= yloadM*min(rg_xloadM/rg_yloadM)
+
+rgScr=apply(apply(yloadM,2,range),2,function(x) {y=max(abs(x));return(c(-y,y))})
+
+rgScrC=apply(apply(compM,2,range),2,function(x) {y=max(abs(x));return(c(-y,y))})
+cr=as.vector(rgScr/rgScrC)
+cr=min(cr[cr>0])
+
+compM= compM*cr*0.5
+
+if(outfilebool) {
+	par(mfrow=c(1,2))
+	rln = readLines(outfile)
+	plot(x = 2, y = 2,type="n",xlab="",ylab="",bty="n",xaxt="n",yaxt="n")
+	legend(1.25,2.5,rln,bty="n")
+}
+
+if(theta > 0) {
+	plot(xlogadM,type="n",xlim=(range(xlogadM[,1])*1.1), ylim=(range(xlogadM[,2])*1.1),xlab="",ylab="")
+	text(compM,rownames(compM),col="green")
+	arrows(0,0,compM[,1],compM[,2],col="green",length=0.1,angle=20)
+}
+else {
+	plot(xlogadM,type="n",xlim=(range(xlogadM[,1])*1.1), ylim=(range(xlogadM[,2])*1.1),xlab=paste("Comp ",plsCompPlot[1],sep=" "),ylab=paste("Comp ",plsCompPlot[2],sep = " "))
+}
+
+text(xlogadM,as.character(dataframe[,geneNameCol]))
+text(yloadM,rownames(yloadM),col="red")
+arrows(0,0,yloadM[,1]*0.9,yloadM[,2]*0.9,col="blue",length=0.1,angle=20)
+
+#
+# Write out the interactive file
+#
+
+##interactivefile = "c:\\tmp\\plsinteractive.csv"
+
+x = xlogadM[,1]
+y = xlogadM[,2]
+
+labels = row.names(xlogadM)
+dataf = data.frame(x,y,labels)
+write.table(dataf,interactivefile,quote=F,sep=",",row.names=F,col.names=F)
+
+dev.off()
+}
+

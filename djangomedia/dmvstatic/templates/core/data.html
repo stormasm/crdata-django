@@ -1,0 +1,28 @@
+{%extends "database.html"%}
+{%block body%}
+<h2>Data</h2>
+
+<p>
+
+
+To upload data click
+<a href="{%url core.views.dataupload%}">Upload</a> or on <b>Upload</b> above.
+</p>
+
+<p>
+Currently, all input data must be in tabular format and saved in Comma
+Separated Values (CSV) file format. CSV format files are plain
+text and can be easily generated with text editors, Microsoft Excel, Open Office,
+Google Docs and Spreadsheets and
+other spreadsheet programs. The first row and column in CRdata input
+files are assumed to be row and column labels (names).
+</p>
+
+<p>
+The <b>View</b> menu item takes you to a listing of the files you have uploaded and allows you to view the contents of the individual data files.
+
+<p>
+The <b>Delete</b> menu item allows you to delete data files that you have already uploaded.
+<br>
+
+{%endblock%}

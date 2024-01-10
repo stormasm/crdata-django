@@ -1,0 +1,14 @@
+{%extends "database.html"%}
+{%block body%}
+
+<h2>{{user}}, there was a data error in your uploaded file.</h2>
+
+Please attempt to fix your data file and try uploading again.
+
+{%for error in errors%}
+	<p>{{error}}</p>
+{% endfor %}
+
+
+{%endblock%}
+

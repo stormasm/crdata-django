@@ -1,0 +1,70 @@
+{%extends "database.html"%}
+{%block body%}
+<h2>{{user}}'s data</h2>
+
+<form id="form" action="{%url core.views.datadelete%}" method="post">
+
+		<style type="text/css" title="currentStyle">
+			@import "http://www.crdata.org/dmvstatic/datatables/css/demos.css";
+		</style>
+		<script type="text/javascript" charset="utf-8">
+			var oTable;
+			
+			$(document).ready(function() {
+				oTable = $('#example').dataTable();
+
+			$("#paradigm_all").click(function()				
+			{
+				var checked_status = this.checked;
+				$("input[value=paradigm]").each(function()
+				{
+					this.checked = checked_status;
+				});
+			});					
+				
+			});
+		</script>
+
+	<div id="dt_example">
+		<div id="container">
+		<div class="full_width big">
+				<i>Delete</i> your uploaded data files.
+			</div>						
+			<h1>Select files to delete</h1>
+			<div id="demo">
+<input type="submit" value="Delete Data"><p>
+<table cellpadding="0" cellspacing="0" border="0" class="display" id="example">
+	<thead>
+		<tr>
+			<th>Select</th>
+			<th>Filename</th>			
+			<th>Date</th>
+			<th>Model</th>
+		</tr>
+	</thead>
+	<tbody>
+	{%for file in files%}		
+		<tr class="gradeX">
+		<td class="center"><input type="checkbox" name={{file.filename}} value="paradigm"></td>		
+		<td class="center">{{file.filename}}</td>
+		<td class="center">{{file.filedate}}</td>
+		<td class="center">{{file.modelname}}</td>
+		</tr>
+	{%endfor%}
+	<p>
+	<input type="checkbox" id="paradigm_all">Select All<br>	
+	</tbody>
+	<tfoot>
+		<tr>
+			<th>Select</th>
+			<th>Filename</th>			
+			<th>Date</th>
+			<th>Model</th>
+		</tr>
+	</tfoot>
+</table>
+</form>
+			</div>			
+		</div>
+	</div>
+{%endblock%}

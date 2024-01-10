@@ -1,0 +1,8 @@
+readfile=function(datafile,filetype)
+{
+if (filetype == "csv")
+	dataframe = read.csv(datafile, header=TRUE)
+else
+	dataframe = read.table(datafile, header=TRUE)
+}
+

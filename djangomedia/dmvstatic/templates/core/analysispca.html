@@ -1,0 +1,90 @@
+{%extends "analysisbase.html"%}
+{%block body%}
+
+	<style type="text/css" title="currentStyle">
+		@import "http://www.crdata.org/dmvstatic/jqueryui/themes/base/ui.all.css";
+	</style>
+	
+	<script src="http://www.crdata.org/dmvstatic/jqueryui/ui/ui.core.js"></script>
+	<script src="http://www.crdata.org/dmvstatic/jqueryui/ui/ui.slider.js"></script>	
+	<script type="text/javascript">
+
+	$(document).ready(function(){
+    
+		$("#butrotateaxis").click(function () {
+			$("#rotateaxis").toggle();
+		});
+
+		$("#butscaleaxis").click(function () {
+			$("#scaleaxis").toggle();
+		});		
+		
+		$(function() {
+		
+			$("#xaxis").slider({
+				orientation: "horizontal",
+				range: "min",
+				min: 0,
+				max: 360,
+				value: 0,
+				slide: function(event, ui) {
+				$("#xamount").val(ui.value);
+			}
+			});
+
+			$("#xamount").val($("#xaxis").slider("value"));
+		});
+
+		$(function() {
+		
+			$("#xyaxis").slider({
+				orientation: "horizontal",
+				range: "min",
+				min: 1,
+				max: 100,
+				value: 10,
+				slide: function(event, ui) {
+				$("#xyamount").val(ui.value);
+			}
+			});
+
+			$("#xyamount").val($("#xyaxis").slider("value"));
+		});
+		
+	});	
+
+	</script>
+</head>
+<body>
+
+<h2>Analysis PCA</h2>
+<img border="0" src="http://www.crdata.org/dmvstatic/image/Wikipedia-16x16.png"/></img>
+<a href="http://en.wikipedia.org/wiki/Principal_component_analysis">
+Wikipedia Definition
+</a>
+<p>
+<button id="butrotateaxis">RotateAxis</button>
+<button id="butscaleaxis">ScaleAxis</button>
+</p>
+
+<h2>{{user}} please select one file.</h2>
+
+<form action="{%url core.views.displaypca%}" method="post">
+
+<h4>File 1</h4>
+<select name="filename">
+{%for file in files%}
+    <option id="{{file|cut:"."}}" value="{{file}}">{{file}}</option>
+{% endfor %}
+</select>
+
+<h4>Text Output</h4>
+<input type=checkbox value="textoutput" name="textoutput">Yes<P>
+
+{% include "optionrotate.html" %}
+{% include "optionscaling.html" %}
+
+<input type="submit" value="Submit" />
+</form>	
+
+{%endblock%}

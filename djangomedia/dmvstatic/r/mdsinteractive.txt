@@ -1,0 +1,35 @@
+interactivecmdscale=function(rownames,columnnames,datafile,imagefile,filetype,distype)
+{
+
+if (filetype == "csv")
+	dataframe = read.csv(datafile, header=TRUE)
+else
+	dataframe = read.table(datafile, header=TRUE)
+
+genedata = rowcolumndataframe(rownames, columnnames, dataframe)
+
+labels = genedata[,1]
+genedata = as.matrix(genedata[,-1])
+
+#correlation
+if (distype == "correlation") {
+	mm=t(genedata)
+	colnames(mm) = labels
+	dist = as.dist((1 - cor(mm))/2)
+}
+#euclidean -- for now this is the default
+else {
+	dist = dist(genedata)
+}
+
+loc = cmdscale(dist)
+
+x = loc[,1]
+y = loc[,2]
+
+dataf = data.frame(x,y,labels)
+write.table(dataf,imagefile,quote=F,sep=",",row.names=F,col.names=F)
+
+}
+
+

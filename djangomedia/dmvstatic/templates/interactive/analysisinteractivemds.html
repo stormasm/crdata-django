@@ -1,0 +1,55 @@
+{%extends "interactivebase.html"%}
+{%block body%}
+
+      <script type="text/javascript">
+
+	$(document).ready(function(){
+		dmv.selectallcheckbox.selectallrows();
+		dmv.selectallcheckbox.selectallcolumns();	
+		dmv.ajaxbuildcheckbox.attachchangeventoselect();
+		var firstfileinlist = "{{files|first|safe}}";
+		dmv.ajaxbuildcheckbox.triggerselectevent(firstfileinlist);
+   	});
+	</script>
+	
+<h2>Interactive Multidimensional Scaling</h2>
+
+This will display your multidimensional scaling data.
+
+<h2>List of data files for {{user}}.</h2>
+
+<form action="{%url core.viewsinteractive.interactivemds%}" method="post">
+
+<select name="filename">
+{%for file in files%}
+    <option id="{{file|cut:"."}}" value="{{file}}">{{file}}</option>
+{% endfor %}
+</select>
+<br><br>
+
+<h2>Rows</h2>
+<p>
+<input type="checkbox" id="allrows" checked="yes">Select All<br>	
+<div id = "rownames">
+</div>
+
+<h2>Columns</h2>
+<p>
+<input type="checkbox" id="allcolumns" checked="yes">Select All<br>
+<div id = "columnnames">
+</div>
+
+<h2>Distance Measures</h2>
+<p>
+
+<div id = "distancemeasure">
+<input id="euclidean" name="distancemeasure" type="radio" value="euclidean" checked="yes">euclidean</input>
+<input id="correlation" name="distancemeasure" type="radio" value="correlation" checked="yes">correlation</input>
+</div>
+
+<br>
+<br>
+<input type="submit" value="Submit" />
+</form>	
+
+{%endblock%}

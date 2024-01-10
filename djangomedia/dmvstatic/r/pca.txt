@@ -1,0 +1,97 @@
+plotpca=function(datafile,imagefile,interactivefile,filetype,outfile,
+	outfilebool,theta,gamma,logscale,userxlimylim){
+
+if (filetype == "csv")
+	dataframe = read.csv(datafile, header=TRUE,row.names=1)
+else
+	dataframe = read.table(datafile, header=TRUE,row.names=1)
+
+dataframe = round(dataframe, digits=2)		
+png(imagefile,width=800,height=438)
+
+# Axis Rotation
+mdat = matrix(c(cos(theta), sin(theta), -sin(theta), cos(theta)), nrow = 2, ncol=2, byrow=TRUE)
+
+# Axis Scaling
+ndat = matrix(c(gamma, 0, 0, gamma), nrow = 2, ncol=2, byrow=TRUE)
+		
+pc = princomp(dataframe,scale=TRUE)
+
+plotcomp=c(1,2)
+pc$scores[,plotcomp] = pc$scores[,plotcomp] %*% mdat
+pc$scores[,plotcomp] = pc$scores[,plotcomp] %*% ndat
+
+mmScores=pc$scores[,plotcomp]
+mmVar =cov(dataframe,pc$scores[,plotcomp])
+
+### Constantin's New Code October 1
+compM=diag(c(1,1))
+row.names(compM) = c("Comp1","Comp2")
+#mmVar=rbind(mmVar,compM)
+compM=compM %*% mdat
+
+# code replacing biplot function
+# rangeScore
+rgScr=apply(mmScores,2,range)
+rgScr=apply(rgScr,2,function(x) {y=max(abs(x));return(c(-y,y))})
+rgScr=apply(apply(mmScores,2,range),2,function(x) {y=max(abs(x));return(c(-y,y))})
+cr=as.vector(rgScr/apply(mmVar,2,range))
+cr=min(cr[cr>0])
+
+if(outfilebool) {
+	pc.sdev = round(pc$sdev,2)
+	sink(outfile)
+	print("Standard Deviation")
+	print(pc.sdev)
+	sink()
+
+	par(mfrow=c(1,2))
+	rln = readLines(outfile)
+	plot(x = 2, y = 2,type="n",xlab="",ylab="",bty="n",xaxt="n",yaxt="n")
+	legend(1.25,2.5,rln,bty="n")
+}
+
+rangescores = c(rgScr[1,1],rgScr[2,1],rgScr[1,2],rgScr[2,2])
+output = xlimylim(rangescores,userxlimylim)
+
+if(theta > 0) {
+
+# Original code before implementing xlimylim
+# Leave here through Jan 1, 2010
+#
+#plot(mmScores[,1],mmScores[,2],type="n",xlim=c(rgScr[1,1],rgScr[2,1]),ylim=c(rgScr[1,2],rgScr[2,2]),xlab="",ylab="")
+plot(mmScores[,1],mmScores[,2], log=logscale, type="n",xlim=c(output[1],output[2]),ylim=c(output[3],output[4]),xlab="",ylab="")
+
+  text(compM[,1],compM[,2],row.names(compM),col="blue")
+  arrows(rep(0,dim(compM)[1]),rep(0,dim(compM)[1]),compM[,1],compM[,2],col="blue")  
+}
+else {
+  
+# Original code before implementing xlimylim
+# Leave here through Jan 1, 2010
+#
+#plot(mmScores[,1],mmScores[,2],type="n",xlim=c(rgScr[1,1],rgScr[2,1]),ylim=c(rgScr[1,2],rgScr[2,2]),xlab=paste("Comp ",plotcomp[1],sep=""),ylab=paste("Comp ",plotcomp[2],sep=""))
+plot(mmScores[,1],mmScores[,2], log=logscale, type="n",xlim=c(output[1],output[2]),ylim=c(output[3],output[4]),xlab=paste("Comp ",plotcomp[1],sep=""),ylab=paste("Comp ",plotcomp[2],sep=""))
+}
+
+text(mmScores[,1],mmScores[,2],row.names(mmScores))
+mmVar =mmVar*cr
+
+text(mmVar[,1],mmVar[,2],row.names(mmVar),col="red")
+arrows(rep(0,dim(mmVar)[1]),rep(0,dim(mmVar)[1]),mmVar[,1],mmVar[,2],col="red")
+
+#
+# Write out the interactive file
+#
+
+##interactivefile = "c:\\tmp\\pcainteractive.csv"
+
+x = mmScores[,1]
+y = mmScores[,2]
+
+labels = row.names(mmScores)
+dataf = data.frame(x,y,labels)
+write.table(dataf,interactivefile,quote=F,sep=",",row.names=F,col.names=F)
+
+dev.off()
+}

@@ -1,0 +1,89 @@
+{%extends "helpbase.html"%}
+{%block body%}
+
+
+This tutorial will help you get started using the CRdata system.
+
+<h2>Setting up an account</h2>
+
+<p>You may use the CRdata system in one of two ways.</p>
+<ul>
+<li>AnonymousUser</li>
+<li>A personalized Login Name that you create</li>
+</ul>
+<br>
+
+If you do not want to set up an account you can use
+CRdata as <b>AnonymousUser</b>.  You will have all of the same functionality
+on the system as a user with a login, but none of your data will be saved long term.
+
+Other users who use the system as <b>AnonymousUser</b> will have the ability to see your data and results.
+
+Your data and results will be saved until you or another <b>AnonymousUser</b> delete them.
+
+If you don't want others to see your data and results then you should go ahead and create your own personal account.
+
+<p>
+To set up an account on the CRdata system go to the 
+
+<a href="{%url core.views.userlogin%}">Sign in</a>
+page and underneath the <b>Login</b> button is
+
+<a href="{%url core.views.usercreate%}">Create User</a>.
+
+<h2>Data</h2>
+
+<p>
+Once you have chosen your account type you are ready to upload data to CRdata.
+
+Go the <b>Data</b> tab
+and click on
+
+<a href="{%url core.views.dataupload%}">Upload</a>.
+</p>
+
+<p>
+Currently, all input data must be in tabular format and saved in Comma
+Separated Values (CSV) file format. CSV format files are plain
+text and can be easily generated with text editors, Microsoft Excel, Open Office,
+Google Docs and Spreadsheets and
+other spreadsheet programs. The first row and column in CRdata input
+files are assumed to be row and column labels (names).  These label names
+can be any mixture of the letters A - Z and numerals 0 - 9, otherwise known as
+alphanumeric characters.
+</p>
+
+
+<p>
+The <b>View</b> menu item takes you to a listing of the files you have uploaded and allows you to view the contents of the individual data files.
+
+<p>
+The <b>Delete</b> menu item allows you to delete data files that you have already uploaded.
+<br>
+
+<h2>Analysis</h2>
+
+<p>
+The Analysis tab contains the algorithms available in CRdata that allow you to visualize 
+your data in different ways. Simply go to the Analysis tab and pick an algorithm that you are interested in. 
+After picking an algorithm from the menu, you will see your list of data files in a drop down menu. 
+Select one or more data files from the drop down and then click on the <b>Submit</b> button.  
+You will automatically be presented with your results.
+<p>
+<a href="{%url core.views.helppagetwo%}">
+Description of the analysis algorithms and links to their R vignettes.
+</a>
+
+
+<h2>Gallery</h2>
+
+<p> 
+
+The Gallery is a repository of all of your results.  New results are simply appended to the existing results set.
+<p>
+Gallery One is a simple listing, where as Gallery Two includes thumb nails at the bottom of the page for easier navigation.
+<p>
+The <b>Delete</b> menu item allows you to delete your analysis results.
+<br>
+
+{%endblock%}

@@ -1,0 +1,57 @@
+{%extends "analysisbase.html"%}
+{%block body%}
+
+      <script type="text/javascript">
+
+	$(document).ready(function(){
+		$("#butpalette").click(function () {
+			$("#palette").toggle();
+		});
+
+		dmv.selectallcheckbox.selectallrows();
+		dmv.selectallcheckbox.selectallcolumns();	
+		dmv.ajaxbuildcheckbox.attachchangeventoselect();
+		var firstfileinlist = "{{files|first|safe}}";
+		dmv.ajaxbuildcheckbox.triggerselectevent(firstfileinlist);
+   	});
+	</script>
+
+<h2>Analysis Box Plot</h2>
+<a href="http://stat.ethz.ch/R-manual/R-patched/library/graphics/html/boxplot.html">
+Box Plot</a>
+&nbsp;
+Create box-and-whisker plots.
+
+<p><button id="butpalette">Color Palette</button></p>
+
+<form action="{%url core.views.displayboxplot%}" method="post">
+
+{% include "optioncolorpalette.html" %}
+
+<h2>List of data files for {{user}}.</h2>
+
+<select name="filename">
+{%for file in files%}
+    <option id="{{file|cut:"."}}" value="{{file}}">{{file}}</option>
+{% endfor %}
+</select>
+<br><br>
+
+<h2>Rows</h2>
+<p>
+<input type="checkbox" id="allrows" checked="yes">Select All<br>	
+<div id = "rownames">
+</div>
+
+<h2>Columns</h2>
+<p>
+<input type="checkbox" id="allcolumns" checked="yes">Select All<br>
+<div id = "columnnames">
+</div>
+
+<br>
+<br>
+<input type="submit" value="Submit" />
+</form>	
+
+{%endblock%}

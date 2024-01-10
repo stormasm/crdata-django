@@ -1,0 +1,22 @@
+plotsimple=function(datafile,imagefile,filetype,theta)
+{
+if (filetype == "csv")
+	simple = read.csv(datafile, header=TRUE)
+else
+	simple = read.table(datafile, header=TRUE)
+
+png(imagefile)
+
+dimple = as.matrix(simple[,-1])
+
+mdat = matrix(c(cos(theta), sin(theta), -sin(theta), cos(theta)), nrow = 2, ncol=2, byrow=TRUE)
+
+life = dimple %*% mdat
+par(mfrow=c(1,2))
+
+plot(dimple,type="o",col="red")
+plot(life,type="o",col="blue")
+dev.off()
+}
+
+

@@ -1,0 +1,151 @@
+{%extends "analysisbase.html"%}
+{%block body%}
+
+	<style type="text/css" title="currentStyle">
+		@import "http://www.crdata.org/dmvstatic/jqueryui/themes/base/ui.all.css";
+	</style>
+		
+	<script src="http://www.crdata.org/dmvstatic/jqueryui/ui/ui.core.js"></script>
+	<script src="http://www.crdata.org/dmvstatic/jqueryui/ui/ui.selectable.js"></script>	
+	
+	<style type="text/css">
+	#feedback { float:left; font-size: 1.5em; }
+	#selectable .ui-selecting { background: #FECA40; }
+	#selectable .ui-selected { background: #F39814; color: white; }
+	#selectable { list-style-type: none; margin: 0; padding: 0; }
+	#selectable li { margin: 3px; padding: 1px; float: left; width: 100px; height: 30px; font-size: 2em; text-align: center; }
+	</style>
+	
+      <script type="text/javascript">
+      
+	$(document).ready(function(){	
+	
+	var filelist = [];
+	var poundfile = []; 
+	
+	{%for file in files%}
+		 filelist.push("#{{file|cut:"."}}")
+	{% endfor %}
+
+
+
+
+	
+		$("select").change(function () {
+			$("select option:selected").each(function () {
+			var xfilename = $(this).text();
+			$.post('ajaxgetrownamesfromfile', {'filename': xfilename},
+				function(data){
+					var mynewdiv = buildgenenames(data);
+					$("#genenames").empty();
+					$("#genenames").append(mynewdiv);
+					}, "json");
+			});			
+		});
+		
+		$("#selectable").selectable({
+			stop: function(){
+				var result = $("#select-result").empty();
+				$(".ui-selected", this).each(function(){
+					var index = $("#selectable li").index(this);
+					var name = this.id;
+					result.append(name + " ");
+				});
+			}
+		});
+   	});
+	
+	var buildgenenames = function(data) {
+
+		var x = " ";
+		var y = " ";
+		var buffer = [];
+		
+		var datalength = countProperties(data);
+
+		for (i = 0; i < datalength; i++) {
+			var pstart = "<li class=\"ui-state-default\" "
+			var p00 = "name=\"" + data[i] + "\" "
+			var p01 = "value=\"" + data[i] + "\" "
+			var p02 = "id=\"" + data[i] + "\">"			
+			var pend = "</li>"
+			buffer[i] = pstart + p00 + p01 + p02 + data[i] + pend;
+			x = x + buffer[i]
+		}
+
+
+//		for (i = 0; i < datalength; i++) {
+//			var pstart = "<input type=\"checkbox\" checked=\"yes\" "
+//			var p00 = "name=\"" + data[i] + "\" "
+//			var p01 = "value=\"" + data[i] + "\">"
+//			var pend = "</input>"
+//			buffer[i] = pstart + p00 + p01 + data[i] + pend;
+//			x = x + buffer[i]
+//		}
+		
+//		y = "<div id=\"genenamestwo\"> <ol id=\"selectable\"> " + x + "</ol></div>";
+		y = "<ol id=\"selectable\"> " + x + "</ol>";
+		
+		return y;
+	}
+	
+	function countProperties(obj) {
+		var prop;
+		var propCount = 0;
+  
+		for (prop in obj) {
+		propCount++;
+		}
+		return propCount;
+	}
+	
+	</script>
+
+<h2>Linear Model</h2>
+
+For now this is testing row and column selection.
+
+<h2>List of data files for {{user}}.</h2>
+
+<form action="{%url core.views.displayjqueryui%}" method="post">
+
+<select name="filename">
+{%for file in files%}
+    <option id="{{file|cut:"."}}" value="{{file}}">{{file}}</option>
+{% endfor %}
+</select>
+<br><br>
+
+<div id = "genenames">
+
+<ol id="selectable">
+
+{%for genename in genenames%}      
+<li id="{{genename}}" name="{{genename}}" value="{{genename}}" class="ui-state-default">{{genename}}</li>
+{% endfor %}
+
+</ol>
+</div>
+<br>
+
+<p>
+
+<div>
+<p style="float:left">
+Select rows and columns by dragging a box (sometimes called a lasso) with the mouse 
+over the elements. Also, elements can be selected by clicking while holding the Ctrl/Meta key, 
+allowing for multiple (non-contiguous) selections.</p>
+</div>
+
+<br>
+<input style="float:left" type="submit" value="Submit" />
+</form>	
+
+<div>
+<p>&nbsp<br></p>
+<p id="feedback">
+Rows selected: <span id="select-result">none</span>.
+</p>
+</div>
+
+{%endblock%}

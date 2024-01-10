@@ -1,0 +1,40 @@
+plottimeseries=function(rownames, columnnames, datafile,imagefile,filetype)
+{
+png(imagefile,width=700,height=438)
+
+if (filetype == "csv")
+	dataframe = read.csv(datafile, header=TRUE)
+else
+	dataframe = read.table(datafile, header=TRUE)
+
+timeseriesdata = rowcolumndataframe(rownames, columnnames, dataframe)
+
+mdim = dim(timeseriesdata)
+
+# the palette name is stored as a global name in rpy
+colors = getColorPalette(length(rownames),palettename)
+
+rowone = timeseriesdata[1,-1]
+
+rangevalues = range(timeseriesdata[,-1])
+rangevalue1 = rangevalues[1]
+rangevalue2 = rangevalues[2]
+
+par(mfrow=c(1,2))
+plot(c(1:(mdim[2]-1)),rowone,type="o", pch = 0, col=colors[1], ylim=c(rangevalue1,rangevalue2) ,xlab="",ylab="",axes=FALSE)
+
+for (rownumber in c(2:mdim[1])) { 
+	lines(c(1:(mdim[2]-1)),timeseriesdata[rownumber,-1],type="o", col =  colors[rownumber])
+}
+
+colnames = names(rowone)
+axis(1, at=c(1:(mdim[2]-1)), labels=colnames)
+axis(2)
+box()
+
+plot(x = 2, y = 2,type="n",xlab="",ylab="",bty="n",xaxt="n",yaxt="n")
+legend(x="topleft",y=NULL, rownames, col = colors, lw = 1, pch = c(1:mdim[1]), merge = TRUE)
+
+dev.off()
+}
+

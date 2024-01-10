@@ -1,0 +1,10 @@
+rowcolumndataframe = function(rownames, columnnames, dataframe) {	
+	allcolumnnames = colnames(dataframe)
+	row1column1 = allcolumnnames[1]
+	# concatenate the first column name to the list of column names
+	columnnames = c(row1column1,columnnames)
+	rcdata = dataframe[match(rownames,dataframe[,1]), match(columnnames,colnames(dataframe))]
+	return(rcdata)
+}
+
+

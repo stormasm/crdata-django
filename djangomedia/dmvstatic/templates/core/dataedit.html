@@ -1,0 +1,11 @@
+{%extends "database.html"%}
+{%block body%}
+<h2>Edit a Data File (Not Yet Implemented)</h2>
+
+<form action="{%url core.views.dataedit%}" method="post">
+<table>
+{{form}}
+<tr><td><input type="submit" value="Edit Data"></td></tr>
+</table>
+</form>
+{%endblock%}

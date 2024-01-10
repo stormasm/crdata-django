@@ -1,0 +1,34 @@
+{%extends "homebase.html"%}
+{%block body%}
+
+<p>
+
+<h1>
+Welcome to CRdata !
+</h1>
+<br>
+
+
+CRdata makes 
+<a target="_blank" href="http://www.r-project.org">R</a>
+and
+<a target="_blank" href="http://www.bioconductor.org">BioConductor</a> 
+data analysis and modeling resources available through a web browser.
+
+<br>
+<p>
+Further resources can be found here.
+</p>
+<a href="{%url core.views.helppageone%}">Quick Start Tutorial</a>
+<p>
+<a href="{%url core.views.helptop%}">General Help Topics</a>
+<p>
+<a href="{%url core.views.helppagefive%}">Analysis Best Practices</a>
+<p>
+<a href="{%url core.views.helppagefour%}">View Source Code</a>
+
+<br><br>
+<b>CRdata is a NHLBI funded R33 systems biology project.</b>
+
+{%endblock%}
+

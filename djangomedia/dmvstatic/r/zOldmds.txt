@@ -1,0 +1,53 @@
+plotmds=function(rownames,columnnames,datafile,imagefile,filetype,distype,theta,gamma)
+
+{
+png(imagefile,width=700,height=438)
+
+if (filetype == "csv")
+	dataframe = read.csv(datafile, header=TRUE)
+else
+	dataframe = read.table(datafile, header=TRUE)
+
+# test version -- grab all of the data
+# genedata = dataframe
+# production version -- select rows and columns
+genedata = rowcolumndataframe(rownames, columnnames, dataframe)
+
+labels = genedata[,1]
+genedata = as.matrix(genedata[,-1])
+
+#correlation
+if (distype == "correlation") {
+	mm=t(genedata)
+	colnames(mm) = labels
+	dist = as.dist((1 - cor(mm))/2)
+}
+#euclidean -- for now this is the default
+else {
+	dist = dist(genedata)
+}
+
+# theta = pi / 2
+
+loc = cmdscale(dist)
+
+# Axis Rotation
+mdat = matrix(c(cos(theta), sin(theta), -sin(theta), cos(theta)), nrow = 2, ncol=2, byrow=TRUE)
+loc = loc %*% mdat
+
+# Axis Scaling
+ndat = matrix(c(gamma, 0, 0, gamma), nrow = 2, ncol=2, byrow=TRUE)
+loc = loc %*% ndat
+
+x = loc[,1]
+y = loc[,2]
+plot(x, y, type="n", xlab="", ylab="", main="Multidimensional scaling")
+
+# both of these lines work, leave them both here for reference.
+#text(x, y, rownames, cex=0.8)
+text(x, y, labels, cex=0.8)
+
+box()
+dev.off()
+}
+

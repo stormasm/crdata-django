@@ -1,0 +1,16 @@
+{%extends "gallerybase.html"%}
+
+{%block body%}
+<h2>Gallery One</h2>
+
+<h2>&nbsp;&nbsp;
+	{{user}}'s data</h2>
+	{%for file in files%}		
+	<li>
+	<div style>
+	<img border="0" src="http://www.crdata.org/dmvimage/{{user}}/image/{{file}}"/>
+	</div>
+	</li><br>
+	{%endfor%}			
+
+{%endblock%}

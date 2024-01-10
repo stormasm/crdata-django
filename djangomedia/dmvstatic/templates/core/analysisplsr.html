@@ -1,0 +1,114 @@
+{%extends "analysisbase.html"%}
+{%block body%}
+
+	<style type="text/css" title="currentStyle">
+		@import "http://www.crdata.org/dmvstatic/jqueryui/themes/base/ui.all.css";
+	</style>
+	
+	<script src="http://www.crdata.org/dmvstatic/jqueryui/ui/ui.core.js"></script>
+	<script src="http://www.crdata.org/dmvstatic/jqueryui/ui/ui.slider.js"></script>	
+	<script type="text/javascript">
+
+	$(document).ready(function(){
+    
+		$("#butrotateaxis").click(function () {
+			$("#rotateaxis").toggle();
+		});
+
+		$("#butscaleaxis").click(function () {
+			$("#scaleaxis").toggle();
+		});		
+		
+		$(function() {
+		
+			$("#xaxis").slider({
+				orientation: "horizontal",
+				range: "min",
+				min: 0,
+				max: 360,
+				value: 0,
+				slide: function(event, ui) {
+				$("#xamount").val(ui.value);
+			}
+			});
+
+			$("#xamount").val($("#xaxis").slider("value"));
+		});
+
+		$(function() {
+		
+			$("#xyaxis").slider({
+				orientation: "horizontal",
+				range: "min",
+				min: 1,
+				max: 100,
+				value: 10,
+				slide: function(event, ui) {
+				$("#xyamount").val(ui.value);
+			}
+			});
+
+			$("#xyamount").val($("#xyaxis").slider("value"));
+		});
+		
+		dmv.ajaxfilestats.attachchangeventoselect('#dmvradiobutton','#dmvradiobuttonerror');
+	});	
+
+	</script>
+</head>
+<body>
+<div id="toplsr">
+
+<h2>Analysis PLSR</h2>
+<img border="0" src="http://www.crdata.org/dmvstatic/image/Wikipedia-16x16.png"/></img>
+<a href="http://en.wikipedia.org/wiki/Partial_least_squares_regression">
+Wikipedia Definition
+</a>
+&nbsp;
+Implements the method described in
+<a href="http://www.pnas.org/content/105/51/20100.abstract">
+Georgescu et al, PNAS 2008
+</a>
+
+<p>
+<button id="butrotateaxis">RotateAxis</button>
+<button id="butscaleaxis">ScaleAxis</button>
+</p>
+
+This will analyze partial least squares regression.
+
+<h2>{{user}} you must choose two corresponding files.</h2>
+
+<form action="{%url core.views.displayplsr%}" method="post">
+
+<h4>File 1</h4>
+<select name="filename1">
+{%for file in files%}
+    <option id="{{file|cut:"."}}" value="{{file}}">{{file}}</option>
+{% endfor %}
+</select>
+
+<h4>File 2</h4>
+<select name="filename2">
+{%for file in files%}
+    <option id="{{file|cut:"."}}" value="{{file}}">{{file}}</option>
+{% endfor %}
+</select>
+
+<h4>Text Output</h4>
+<input type=checkbox value="textoutput" name="textoutput">Yes</input>
+
+<div id="dmvradiobutton" class="test09"><br></div>
+<div><p id="dmvradiobuttonerror" style="display:none; color:red">
+<b><br>Component in group one and group two must be different, 
+therefore CRdata is resetting your component states</b>
+</p></div>
+
+{% include "optionrotate.html" %}
+{% include "optionscaling.html" %}
+
+<input type="submit" value="Submit" />
+</form>	
+<!-- toplsr -->
+</div>
+{%endblock%}

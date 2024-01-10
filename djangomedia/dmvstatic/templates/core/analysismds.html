@@ -1,0 +1,112 @@
+{%extends "analysisbase.html"%}
+{%block body%}
+
+	<style type="text/css" title="currentStyle">
+		@import "http://www.crdata.org/dmvstatic/jqueryui/themes/base/ui.all.css";
+	</style>
+	
+	<script src="http://www.crdata.org/dmvstatic/jqueryui/ui/ui.core.js"></script>
+	<script src="http://www.crdata.org/dmvstatic/jqueryui/ui/ui.slider.js"></script>	
+
+	<script type="text/javascript">
+
+	$(document).ready(function(){
+	
+		$("#butrotateaxis").click(function () {
+			$("#rotateaxis").toggle();
+		});
+
+		$("#butscaleaxis").click(function () {
+			$("#scaleaxis").toggle();
+		});		
+		
+		$(function() {
+		
+			$("#xaxis").slider({
+				orientation: "horizontal",
+				range: "min",
+				min: 0,
+				max: 360,
+				value: 0,
+				slide: function(event, ui) {
+				$("#xamount").val(ui.value);
+			}
+			});
+
+			$("#xamount").val($("#xaxis").slider("value"));
+		});
+
+		$(function() {
+		
+			$("#xyaxis").slider({
+				orientation: "horizontal",
+				range: "min",
+				min: 1,
+				max: 100,
+				value: 10,
+				slide: function(event, ui) {
+				$("#xyamount").val(ui.value);
+			}
+			});
+
+			$("#xyamount").val($("#xyaxis").slider("value"));
+		});
+		
+		dmv.selectallcheckbox.selectallrows();
+		dmv.selectallcheckbox.selectallcolumns();	
+		dmv.ajaxbuildcheckbox.attachchangeventoselect();
+		var firstfileinlist = "{{files|first|safe}}";
+		dmv.ajaxbuildcheckbox.triggerselectevent(firstfileinlist);
+   	});
+
+	</script>
+	
+<h2>Analysis MDS</h2>
+
+<img border="0" src="http://www.crdata.org/dmvstatic/image/Wikipedia-16x16.png"/></img>
+<a href="http://en.wikipedia.org/wiki/Multidimensional_scaling">
+Multidimensional Scaling
+</a>
+<p>
+<button id="butrotateaxis">RotateAxis</button>
+<button id="butscaleaxis">ScaleAxis</button>
+</p>
+
+<h2>List of data files for {{user}}.</h2>
+
+<form action="{%url core.views.displaymds%}" method="post">
+
+<select name="filename">
+{%for file in files%}
+    <option id="{{file|cut:"."}}" value="{{file}}">{{file}}</option>
+{% endfor %}
+</select>
+<br><br>
+
+<h2>Rows</h2>
+<p>
+<input type="checkbox" id="allrows" checked="yes">Select All<br>	
+<div id = "rownames">
+</div>
+
+<h2>Columns</h2>
+<p>
+<input type="checkbox" id="allcolumns" checked="yes">Select All<br>
+<div id = "columnnames">
+</div>
+
+<h2>Distance Measures</h2>
+<p>
+
+<div id = "distancemeasure">
+<input id="euclidean" name="distancemeasure" type="radio" value="euclidean" checked="yes">euclidean</input>
+<input id="correlation" name="distancemeasure" type="radio" value="correlation" checked="yes">correlation</input>
+</div>
+
+{% include "optionrotate.html" %}
+{% include "optionscaling.html" %}
+
+<input type="submit" value="Submit" />
+</form>	
+
+{%endblock%}
